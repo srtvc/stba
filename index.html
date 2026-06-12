@@ -3,378 +3,378 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STBA Commission Calculator</title>
+    <title>STBA Commission Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9;
+            background-color: #f8fafc;
+            min-height: 100vh;
+            padding-bottom: 5rem;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .section-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
         }
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
+        .tier-header {
+            padding: 1rem 1.5rem;
+            color: white;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
         }
+        .voucher-row {
+            border-bottom: 1px solid #f1f5f9;
+            padding: 1.25rem 1.5rem;
+        }
+        input[type="number"] {
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 0.6rem;
+            width: 100%;
+            font-weight: 600;
+        }
+        input:focus {
+            outline: 2px solid #3b82f6;
+            border-color: transparent;
+        }
+        .badge-tax { background-color: #fff1f2; color: #9f1239; }
+        .badge-hand { background-color: #f0fdf4; color: #166534; }
+        .max-claim-banner {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+        .text-exceeded { color: #ef4444; font-weight: 800; }
     </style>
 </head>
-<body class="min-h-screen py-10 px-4 relative">
-    <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <header class="mb-8 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h1 class="text-3xl font-bold text-slate-900 tracking-tight">STBA Commission Calculator</h1>
-                <p class="text-slate-500">Calculate net commission with default 1% commission and 2% TDS rules.</p>
-            </div>
-            <div class="flex gap-2 justify-center">
-                <button onclick="showConfirmModal('all')" class="px-4 py-2 text-sm font-semibold text-red-600 bg-red-50 border border-red-100 rounded-lg hover:bg-red-100 transition flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    Reset All Data
-                </button>
-            </div>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <header class="flex flex-col md:row justify-between items-start md:items-center mb-8 gap-4">
+            <h1 class="text-3xl font-black text-slate-900">STBA Commission Hub</h1>
+            <button onclick="clearAllData()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg font-bold text-sm transition">
+                Reset All Fields
+            </button>
         </header>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Left Column: Inputs (Commission & Voucher) -->
-            <div class="lg:col-span-4 space-y-6">
-                <!-- Commission Parameters -->
-                <div class="glass-card p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                        </svg>
-                        Commission Details
-                    </h2>
+        
+        <!-- MAIN INPUT AREA -->
+        <div class="section-card border-t-8 border-blue-600 p-6 md:p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800 mb-4 uppercase tracking-wide">1. Earnings Setup</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-black text-slate-400 uppercase mb-1">Total Collections (₹)</label>
+                            <input type="number" id="main_total" placeholder="0" class="text-lg py-3">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-slate-400 uppercase mb-1">Tier 3 Commission %</label>
+                            <input type="number" id="main_rate" step="0.01" value="1.00" class="text-lg py-3">
+                        </div>
+                    </div>
                     
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Premium / Sales Amount</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">₹</span>
-                                <input type="number" id="base-amount" placeholder="0.00" oninput="handleInputUpdate()"
-                                    class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition">
+                    <div id="breakdown_ui" class="mt-6 hidden">
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500 font-medium">Tier 1 (25% of 20k):</span>
+                                <span id="ui_t1" class="font-bold text-slate-700">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500 font-medium">Tier 2 (15% of 80k):</span>
+                                <span id="ui_t2" class="font-bold text-slate-700">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-500 font-medium">Tier 3 (<span id="ui_rate_label">1.00</span>% of bal):</span>
+                                <span id="ui_t3" class="font-bold text-slate-700">₹0</span>
+                            </div>
+                            <div class="pt-2 border-t border-slate-200 flex justify-between font-black text-blue-600">
+                                <span>Total Gross Earnings:</span>
+                                <span id="ui_gross">₹0</span>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Comm. Rate (%)</label>
-                                <div class="relative">
-                                    <input type="number" id="commission-rate" placeholder="1" value="1" oninput="handleInputUpdate()"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition">
-                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">%</span>
+                <div id="result_ui" class="hidden">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4 uppercase tracking-wide">2. Settlement</h2>
+                    <div class="bg-slate-900 rounded-2xl p-6 text-white shadow-xl">
+                        <div class="space-y-3">
+                            <div class="flex justify-between text-slate-400 text-sm font-bold uppercase">
+                                <span>Gross Amount</span>
+                                <span id="res_gross">0</span>
+                            </div>
+                            <div class="flex justify-between text-red-400 text-sm font-bold uppercase pb-3 border-b border-slate-700">
+                                <span>TDS (2%)</span>
+                                <span id="res_tds">0</span>
+                            </div>
+                            <div class="pt-3">
+                                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Final Net Payout</label>
+                                <div class="flex items-baseline justify-between">
+                                    <span class="text-4xl font-black text-green-400 tracking-tighter" id="res_net">0</span>
+                                    <span class="text-slate-400 font-bold">INR</span>
                                 </div>
-                                <p class="text-[10px] text-slate-400 mt-1">Default set to 1%</p>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1">TDS Rate (%)</label>
-                                <div class="relative">
-                                    <input type="number" id="tax-rate" value="2" oninput="handleInputUpdate()"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition">
-                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">%</span>
-                                </div>
-                                <p class="text-[10px] text-emerald-600 font-medium mt-1">Standard: 2%</p>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Voucher Section -->
-                <div class="glass-card p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-                        </svg>
-                        Voucher Information
-                    </h2>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Voucher Number</label>
-                            <input type="text" id="voucher-no" placeholder="e.g. VCH-2026-001" oninput="handleInputUpdate()"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Voucher Date</label>
-                            <input type="date" id="voucher-date" oninput="handleInputUpdate()"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition">
-                        </div>
-                    </div>
-                </div>
-
-                <button onclick="saveToHistory()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                    </svg>
-                    Save & Log Payout
-                </button>
-            </div>
-
-            <!-- Right Column: Results & History -->
-            <div class="lg:col-span-8 space-y-6">
-                <!-- Live Result Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Gross Commission</p>
-                        <h3 id="display-gross" class="text-2xl font-bold text-slate-800">₹0.00</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 border-l-4 border-l-orange-400">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">TDS Amount</p>
-                        <h3 id="display-tax" class="text-2xl font-bold text-orange-600">-₹0.00</h3>
-                    </div>
-                    <div class="bg-slate-900 p-6 rounded-2xl shadow-md border border-slate-800">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Net Agent Payout</p>
-                        <h3 id="display-net" class="text-2xl font-bold text-emerald-400">₹0.00</h3>
-                    </div>
-                </div>
-
-                <!-- History Table -->
-                <div class="glass-card rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                        <h2 class="text-lg font-semibold text-slate-800">Detailed Payout History</h2>
-                        <button onclick="showConfirmModal('history')" class="text-xs font-semibold text-slate-400 hover:text-red-500">Clear History</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-50">
-                                    <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Voucher Info</th>
-                                    <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase text-right">Premium</th>
-                                    <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase text-right">Net Payout</th>
-                                </tr>
-                            </thead>
-                            <tbody id="history-body" class="divide-y divide-slate-100">
-                                <!-- Table rows -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="no-history" class="p-12 text-center text-slate-400 italic text-sm">
-                        No history entries found. Fill details and click "Save & Log Payout".
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Custom Modal for Confirmations -->
-    <div id="confirm-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
-        <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl border border-slate-100 transform scale-95 transition-transform duration-200">
-            <h3 id="modal-title" class="text-lg font-bold text-slate-900 mb-2">Are you sure?</h3>
-            <p id="modal-description" class="text-slate-500 text-sm mb-6">This action cannot be undone.</p>
-            <div class="flex justify-end gap-3">
-                <button onclick="hideConfirmModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition text-sm font-semibold">
-                    Cancel
-                </button>
-                <button id="modal-confirm-btn" class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white transition text-sm font-semibold">
-                    Confirm
-                </button>
+        <h2 class="text-xl font-black text-slate-800 mb-6 px-2">Voucher Management</h2>
+
+        <!-- TIER DISTRIBUTION -->
+        <div class="space-y-6" id="distribution_zone">
+            <!-- Tier 1 -->
+            <div class="section-card" data-tier="1">
+                <div class="tier-header bg-slate-800">
+                    <div>
+                        <p class="text-sm opacity-80 font-medium uppercase tracking-widest">Tier 1 (25%)</p>
+                        <div class="max-claim-banner">
+                            Limit: ₹<span id="limit_1">0</span> | 
+                            <span id="stat_1">Rem: ₹<span id="rem_1">0</span></span>
+                        </div>
+                    </div>
+                    <button onclick="addNewVoucher(1)" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-xs font-bold transition shadow-md">+ Add</button>
+                </div>
+                <div id="container_1" class="divide-y divide-slate-100"></div>
+            </div>
+
+            <!-- Tier 2 -->
+            <div class="section-card" data-tier="2">
+                <div class="tier-header bg-slate-700">
+                    <div>
+                        <p class="text-sm opacity-80 font-medium uppercase tracking-widest">Tier 2 (15%)</p>
+                        <div class="max-claim-banner">
+                            Limit: ₹<span id="limit_2">0</span> | 
+                            <span id="stat_2">Rem: ₹<span id="rem_2">0</span></span>
+                        </div>
+                    </div>
+                    <button onclick="addNewVoucher(2)" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-xs font-bold transition shadow-md">+ Add</button>
+                </div>
+                <div id="container_2" class="divide-y divide-slate-100"></div>
+            </div>
+
+            <!-- Tier 3 -->
+            <div class="section-card" data-tier="3">
+                <div class="tier-header bg-slate-600">
+                    <div>
+                        <p class="text-sm opacity-80 font-medium uppercase tracking-widest">Tier 3 (<span id="t3_header_rate">1.00</span>%)</p>
+                        <div class="max-claim-banner">
+                            Limit: ₹<span id="limit_3">0</span> | 
+                            <span id="stat_3">Rem: ₹<span id="rem_3">0</span></span>
+                        </div>
+                    </div>
+                    <button onclick="addNewVoucher(3)" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-xs font-bold transition shadow-md">+ Add</button>
+                </div>
+                <div id="container_3" class="divide-y divide-slate-100"></div>
             </div>
         </div>
-    </div>
-
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-8 right-8 bg-slate-900 text-white px-6 py-3 rounded-xl shadow-2xl transition-all opacity-0 translate-y-10 pointer-events-none z-50">
-        Saved!
     </div>
 
     <script>
-        // Data State
-        let history = JSON.parse(localStorage.getItem('stba_v3_history')) || [];
-        let currentModalAction = ''; // 'all' or 'history'
+        const KEY = 'stba_pro_netlify_v5';
+        
+        // Rounding optimized for the payer
+        const down = (v) => Math.floor(v);
+        const up = (v) => Math.ceil(v);
 
-        // Main calculation logic
-        function calculate() {
-            const base = parseFloat(document.getElementById('base-amount').value) || 0;
-            const rate = parseFloat(document.getElementById('commission-rate').value) || 0;
-            const taxRate = parseFloat(document.getElementById('tax-rate').value) || 0;
+        let limits = { 1: 0, 2: 0, 3: 0 };
 
-            const gross = base * (rate / 100);
-            const tax = gross * (taxRate / 100);
-            const net = gross - tax;
-
-            document.getElementById('display-gross').textContent = formatCurrency(gross);
-            document.getElementById('display-tax').textContent = `-${formatCurrency(tax)}`;
-            document.getElementById('display-net').textContent = formatCurrency(net);
-
-            return { base, rate, taxRate, gross, tax, net };
-        }
-
-        // Handle typing & save all fields
-        function handleInputUpdate() {
-            calculate();
+        // Global Init
+        window.addEventListener('DOMContentLoaded', () => {
+            initApp();
             
-            const presets = {
-                base: document.getElementById('base-amount').value,
-                rate: document.getElementById('commission-rate').value,
-                taxRate: document.getElementById('tax-rate').value,
-                voucherNo: document.getElementById('voucher-no').value,
-                voucherDate: document.getElementById('voucher-date').value
-            };
-            localStorage.setItem('stba_v3_presets', JSON.stringify(presets));
-        }
+            // Centralized Change Listener for robust browser support
+            document.body.addEventListener('input', (e) => {
+                if (e.target.id === 'main_total' || e.target.id === 'main_rate') {
+                    runMainCalcs();
+                }
+                if (e.target.classList.contains('v-input')) {
+                    const row = e.target.closest('.voucher-row');
+                    updateRowMath(row);
+                    updateTiersRemaining();
+                }
+                save();
+            });
+        });
 
-        function formatCurrency(num) {
-            return new Intl.NumberFormat('en-IN', {
-                style: 'currency',
-                currency: 'INR',
-                maximumFractionDigits: 2
-            }).format(num);
-        }
+        function initApp() {
+            const saved = localStorage.getItem(KEY);
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('main_total').value = data.total || '';
+                document.getElementById('main_rate').value = data.rate || '1.00';
+                
+                runMainCalcs();
 
-        // Save entry to local history log
-        function saveToHistory() {
-            const results = calculate();
-            const vNo = document.getElementById('voucher-no').value || "N/A";
-            const vDate = document.getElementById('voucher-date').value || "N/A";
-
-            if (results.base <= 0) {
-                showToast("Please enter a valid amount");
-                return;
-            }
-
-            const entry = {
-                id: Date.now(),
-                entryDate: new Date().toLocaleDateString(),
-                vNo: vNo,
-                vDate: vDate,
-                ...results
-            };
-
-            history.unshift(entry);
-            if (history.length > 50) history.pop(); 
-            
-            localStorage.setItem('stba_v3_history', JSON.stringify(history));
-            renderHistory();
-            showToast("Payout logged to history!");
-        }
-
-        function renderHistory() {
-            const body = document.getElementById('history-body');
-            const noHistory = document.getElementById('no-history');
-            
-            if (history.length === 0) {
-                body.innerHTML = '';
-                noHistory.classList.remove('hidden');
-                return;
-            }
-
-            noHistory.classList.add('hidden');
-            body.innerHTML = history.map(item => `
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4">
-                        <div class="text-sm font-bold text-slate-800">${item.vNo}</div>
-                        <div class="text-[10px] text-slate-400 uppercase font-semibold">${item.vDate}</div>
-                    </td>
-                    <td class="px-6 py-4 text-sm font-medium text-slate-700 text-right">
-                        ${formatCurrency(item.base)}
-                        <div class="text-[10px] text-slate-400 font-normal">@ ${item.rate}%</div>
-                    </td>
-                    <td class="px-6 py-4 text-sm font-bold text-emerald-600 text-right">
-                        ${formatCurrency(item.net)}
-                        <div class="text-[10px] text-orange-400 font-normal">TDS (${item.taxRate}%): ${formatCurrency(item.tax)}</div>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // Custom Confirmation Modals
-        function showConfirmModal(action) {
-            currentModalAction = action;
-            const modal = document.getElementById('confirm-modal');
-            const title = document.getElementById('modal-title');
-            const desc = document.getElementById('modal-description');
-            const confirmBtn = document.getElementById('modal-confirm-btn');
-
-            if (action === 'all') {
-                title.textContent = "Reset All Data?";
-                desc.textContent = "This will permanently clear your current form inputs, presets, and history.";
-                confirmBtn.onclick = executeResetAll;
-            } else if (action === 'history') {
-                title.textContent = "Clear Payout History?";
-                desc.textContent = "This will wipe out all past saved payouts in the table.";
-                confirmBtn.onclick = executeClearHistory;
-            }
-
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                modal.querySelector('div').classList.remove('scale-95');
-            }, 10);
-        }
-
-        function hideConfirmModal() {
-            const modal = document.getElementById('confirm-modal');
-            modal.classList.add('opacity-0');
-            modal.querySelector('div').classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 200);
-        }
-
-        function executeResetAll() {
-            localStorage.removeItem('stba_v3_presets');
-            localStorage.removeItem('stba_v3_history');
-            history = [];
-            
-            document.getElementById('base-amount').value = '';
-            document.getElementById('commission-rate').value = '1'; // Default Commission 1%
-            document.getElementById('tax-rate').value = '2'; // Default TDS 2%
-            document.getElementById('voucher-no').value = '';
-            document.getElementById('voucher-date').value = '';
-            
-            calculate();
-            renderHistory();
-            hideConfirmModal();
-            showToast("All configurations cleared!");
-        }
-
-        function executeClearHistory() {
-            history = [];
-            localStorage.removeItem('stba_v3_history');
-            renderHistory();
-            hideConfirmModal();
-            showToast("Payout history cleared!");
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.classList.remove('opacity-0', 'translate-y-10');
-            toast.classList.add('opacity-100', 'translate-y-0');
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-10');
-                toast.classList.remove('opacity-100', 'translate-y-0');
-            }, 2000);
-        }
-
-        // Startup Configuration
-        window.onload = function() {
-            const savedPresets = JSON.parse(localStorage.getItem('stba_v3_presets'));
-            if (savedPresets) {
-                document.getElementById('base-amount').value = savedPresets.base || '';
-                document.getElementById('commission-rate').value = savedPresets.rate !== undefined ? savedPresets.rate : '1';
-                document.getElementById('tax-rate').value = savedPresets.taxRate !== undefined ? savedPresets.taxRate : '2';
-                document.getElementById('voucher-no').value = savedPresets.voucherNo || '';
-                document.getElementById('voucher-date').value = savedPresets.voucherDate || '';
+                [1, 2, 3].forEach(t => {
+                    const container = document.getElementById(`container_${t}`);
+                    container.innerHTML = '';
+                    const vals = data.vouchers[t] || [];
+                    if (vals.length > 0) {
+                        vals.forEach(v => addNewVoucher(t, v));
+                    } else {
+                        addNewVoucher(t);
+                    }
+                });
             } else {
-                // Default fallback configuration
-                document.getElementById('commission-rate').value = '1';
-                document.getElementById('tax-rate').value = '2';
+                addNewVoucher(1); addNewVoucher(2); addNewVoucher(3);
+                runMainCalcs();
             }
+        }
+
+        function runMainCalcs() {
+            const total = parseFloat(document.getElementById('main_total').value) || 0;
+            const rate3 = parseFloat(document.getElementById('main_rate').value) || 0;
             
-            calculate();
-            renderHistory();
-        };
+            const breakUI = document.getElementById('breakdown_ui');
+            const resUI = document.getElementById('result_ui');
+
+            document.getElementById('ui_rate_label').innerText = rate3;
+            document.getElementById('t3_header_rate').innerText = rate3;
+
+            if (total <= 0) {
+                breakUI.classList.add('hidden');
+                resUI.classList.add('hidden');
+                limits = { 1: 0, 2: 0, 3: 0 };
+                refreshLimitLabels();
+                return;
+            }
+
+            breakUI.classList.remove('hidden');
+            resUI.classList.remove('hidden');
+
+            let bal = total;
+            
+            // T1
+            let amt1 = Math.min(bal, 20000);
+            let comm1 = down(amt1 * 0.25);
+            bal -= amt1;
+
+            // T2
+            let amt2 = bal > 0 ? Math.min(bal, 80000) : 0;
+            let comm2 = down(amt2 * 0.15);
+            bal -= amt2;
+
+            // T3
+            let comm3 = bal > 0 ? down(bal * (rate3 / 100)) : 0;
+
+            limits = { 1: comm1, 2: comm2, 3: comm3 };
+            
+            document.getElementById('ui_t1').innerText = `₹${comm1.toLocaleString()}`;
+            document.getElementById('ui_t2').innerText = `₹${comm2.toLocaleString()}`;
+            document.getElementById('ui_t3').innerText = `₹${comm3.toLocaleString()}`;
+            
+            const gross = comm1 + comm2 + comm3;
+            document.getElementById('ui_gross').innerText = `₹${gross.toLocaleString()}`;
+
+            // New Tax Rule: 2% TDS, no Cess
+            const tds = up(gross * 0.02);
+            const net = gross - tds;
+
+            document.getElementById('res_gross').innerText = gross.toLocaleString();
+            document.getElementById('res_tds').innerText = tds.toLocaleString();
+            document.getElementById('res_net').innerText = net.toLocaleString();
+
+            refreshLimitLabels();
+            updateTiersRemaining();
+        }
+
+        function refreshLimitLabels() {
+            [1, 2, 3].forEach(t => {
+                document.getElementById(`limit_${t}`).innerText = limits[t].toLocaleString();
+            });
+        }
+
+        function addNewVoucher(tier, val = '') {
+            const container = document.getElementById(`container_${tier}`);
+            const div = document.createElement('div');
+            div.className = 'voucher-row grid grid-cols-1 md:grid-cols-2 gap-4 items-center';
+            div.innerHTML = `
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Voucher Amount</label>
+                    <input type="number" value="${val}" placeholder="0" class="v-input py-2 text-md">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="p-2 rounded-lg badge-tax text-center">
+                        <p class="text-[8px] font-bold uppercase opacity-60">Tax (2% TDS)</p>
+                        <p class="font-bold text-xs">₹<span class="row-tax">0</span></p>
+                    </div>
+                    <div class="p-2 rounded-lg badge-hand text-center">
+                        <p class="text-[8px] font-bold uppercase opacity-60">Net</p>
+                        <p class="font-bold text-xs">₹<span class="row-net">0</span></p>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+            updateRowMath(div);
+        }
+
+        function updateRowMath(row) {
+            const input = row.querySelector('.v-input');
+            const val = parseFloat(input.value) || 0;
+            
+            // New Tax Rule for Vouchers: 2% TDS, no Cess (withheld/tax rounded UP)
+            const tds = up(val * 0.02);
+            
+            row.querySelector('.row-tax').innerText = tds.toLocaleString();
+            row.querySelector('.row-net').innerText = (val - tds).toLocaleString();
+        }
+
+        function updateTiersRemaining() {
+            [1, 2, 3].forEach(t => {
+                const inputs = document.querySelectorAll(`#container_${t} .v-input`);
+                let sum = 0;
+                inputs.forEach(i => sum += (parseFloat(i.value) || 0));
+                
+                const rem = limits[t] - sum;
+                const stat = document.getElementById(`stat_${t}`);
+                const remLabel = document.getElementById(`rem_${t}`);
+                
+                remLabel.innerText = Math.abs(rem).toLocaleString();
+                
+                if (rem < 0) {
+                    stat.className = 'text-exceeded';
+                    stat.innerHTML = `Exceeded: ₹<span id="rem_${t}">${Math.abs(rem).toLocaleString()}</span>`;
+                } else {
+                    stat.className = 'text-green-300 font-bold';
+                    stat.innerHTML = `Rem: ₹<span id="rem_${t}">${rem.toLocaleString()}</span>`;
+                }
+            });
+        }
+
+        function save() {
+            const data = {
+                total: document.getElementById('main_total').value,
+                rate: document.getElementById('main_rate').value,
+                vouchers: {
+                    1: Array.from(document.querySelectorAll('#container_1 .v-input')).map(i => i.value),
+                    2: Array.from(document.querySelectorAll('#container_2 .v-input')).map(i => i.value),
+                    3: Array.from(document.querySelectorAll('#container_3 .v-input')).map(i => i.value)
+                }
+            };
+            localStorage.setItem(KEY, JSON.stringify(data));
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure? This will delete all saved values.')) {
+                localStorage.removeItem(KEY);
+                window.location.reload();
+            }
+        }
     </script>
 </body>
 </html>
+```eof
 
 ```
